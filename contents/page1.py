@@ -21,14 +21,14 @@ def manipulation_text():
         teams = teams.groupby('Team').size().to_dict()
         teams = dict(sorted(teams.items(), key=lambda v: v[1]))
         st.write(teams)
-        st.text("La plupart des équipes ont 23 joueurs.")
+        st.text("Nous constatons que la plupart des équipes ont un effectif de 23 joueurs.")
 
-        st.text("Les 3 joueurs avec le plus de distance")
+        st.text("Les 3 joueurs avec le plus de distance sont listé ci-dessous :")
         players = clean_data(data[['Name', 'Distance Covered', 'Location']])
         players = players.sort_values(by=['Distance Covered'], ascending=False, na_position='last') 
-        players.head(3)
+        st.write(players.head(3).rename(columns={'Distance Covered': 'Distance Covered (in km)'}))
 
-        st.title('Distance parcourue') 
+        st.title('Analyse des distances parcourues') 
         players2 = clean_data(data[['Name', 'Distance Covered', 'Location', 'Distance Covered In Possession', 'Distance Covered Not In Possession']])
         players2 = players2.sort_values(by=['Distance Covered', 'Distance Covered In Possession', 'Distance Covered Not In Possession'], 
                                 ascending=True, na_position='last')
@@ -64,30 +64,9 @@ def manipulation_text():
         st.text("Les 10% les plus lents")
         st.write(speed_low.head(3))
         
-        st.text("Parmis les plus lents, ceux qui ont passé leur temps à courir sans le ballon")
+        st.text("Parmis les plus lents, ceux qui ont passé leur temps à courir sans le ballon sont :")
         very_low_lazy = players2[players2['Name'].isin(speed_low['Name'].to_list())]\
                          .sort_values(by=['Distance Covered Not In Possession'], ascending=False)\
                          .head(3)
         st.write(very_low_lazy)
 
-
-    """
-    st.sidebar.header('Params')
-    plot_type = st.sidebar.selectbox('Type', ['Histogramme', 'Scatterplot'])
-
-    data = {
-        'x': np.random.randint(100, 1000, size=100),
-        'y': np.random.randint(100, 1000, size=100)
-    }
-    data = pd.DataFrame(data)
-
-    st.write(data)
-    st.title('Titre')
-    if plot_type == 'Histogramme':
-        sns.histplot(data['x'], kde=True)
-        st.pyplot()
-    elif plot_type == 'Scatterplot':
-        st.header('Scatterplot')
-        sns.scatterplot(x='x', y='y', data=data)
-        st.pyplot()
-    """

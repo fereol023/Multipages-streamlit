@@ -30,6 +30,7 @@ def velibs():
         st.write(df.head(show_k))
 
         # carte 1 -----------------------------------------------------------------
+        st.text("Avec la carte suivante, nous pouvons visualiser la dispersion des stations de velib dans la ville de Paris.")
         france = folium.Map(location = [48.85, 2.39],
                 zoom_start = 12)
 
@@ -59,6 +60,7 @@ def velibs():
         
         france2 = folium.Map(location=[48.856614, 2.39], zoom_start=12)
 
+        st.text("Nous pouvons voir à l'aide de la carte suivante le nombre de velibs disponibles par station.")
         for k,row in velib.iterrows():
             folium.CircleMarker(location=[row.position['lat'], row.position['lng']], 
                                 fill_color=red(row.available_bikes/float(row.bike_stands)).hex,

@@ -43,11 +43,13 @@ def villes():
     
         france = folium.Map(location = [47, 3], zoom_start = 6)
         transform_villes(villes)
-        liste_selection_villes = ['PARIS', 'MARSEILLE', 'RENNES', 'NIORT']
-        selection_villes = [st.radio("Choisir les villes à afficher", liste_selection_villes)]
-        
-        for i,row in villes.loc[villes['MAJ'].isin(selection_villes),['NomVille', 'MAJ', 'Latitude', 'Longitude']].dropna().iterrows():
-            print(row)
+        liste_selection_villes = villes['NomVille'].values
+        selection_villes = st.selectbox(
+            'Choisir une ville ici', liste_selection_villes
+        )
+        selection_villes = [selection_villes]
+        for i,row in villes.loc[villes['NomVille'].isin(selection_villes),['NomVille', 'MAJ', 'Latitude', 'Longitude']].dropna().iterrows():
+            #print(row)
             folium.Marker([row['Latitude'], row['Longitude']],
                           popup=row['NomVille']).add_to(france)
             
