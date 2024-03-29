@@ -61,12 +61,22 @@ def velibs():
         france2 = folium.Map(location=[48.856614, 2.39], zoom_start=12)
 
         st.text("Nous pouvons voir à l'aide de la carte suivante le nombre de velibs disponibles par station.")
-        for k,row in velib.iterrows():
-            folium.CircleMarker(location=[row.position['lat'], row.position['lng']], 
-                                fill_color=red(row.available_bikes/float(row.bike_stands)).hex,
-                                tooltip=f"{row['name'].split('-')[-1]} : {str(row.available_bikes)} dispo(s) / {str(row.bike_stands)}",       
-                                radius=7).add_to(france2)
-        
-        fig2 = st_folium(france2, width=1000)
-        #st.text("Les détails de la sélection sur cette carte sont ci-dessous.")
-        #st.write(fig2)
+        st.text("Sur cette carte les points chauds (orange) sont ceux où il y a plus de vélibs disponibles.")
+        st.text("Inversément les points froids (bleus) sont ceux où il y a moins de vélibs.")
+
+        velib['lat'] = velib.apply(lambda r: r['position']['lat'], axis=1)
+        velib['lng'] = velib.apply(lambda r: r['position']['lng'], axis=1)
+        velib['available_bikes'] = velib.apply(lambda r: float(r['available_bikes']), axis=1)
+
+        start = [velib.lat.mean(), velib.lng.mean()]
+
+        hmap = folium.Map(start, zoom_start=12)
+
+        hm = HeatMap(
+                list(zip(velib.lat.values, velib.lng.values, velib.available_bikes.values)),
+                min_opacity = .2,
+                radius=20, blur=15, max_zoom=1
+        )
+
+        hmap.add_child(hm)
+        fig2 = st_folium(hmap, width=1000)

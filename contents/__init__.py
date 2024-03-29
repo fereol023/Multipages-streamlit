@@ -9,9 +9,11 @@ import folium
 from io import StringIO
 from colour import Color
 from streamlit_folium import st_folium
+from folium.plugins import HeatMap
 
 
 def clean_data(d):
+    "Pour exercice 1"
     lot1 = [
         'Distance Covered In Possession',
         'Distance Covered Not In Possession',       
